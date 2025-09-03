@@ -1,6 +1,7 @@
 import copy
 from abc import ABC, abstractmethod
-from business_object.statistic import Statistic
+
+from src.business_object.statistic import Statistic
 
 
 class AbstractPokemon(ABC):
@@ -185,4 +186,48 @@ class AbstractPokemon(ABC):
     def name(self) -> str:
         """Get the name of the Pokemon."""
         return self._name
+
+class DefenderPokemon(AbstractPokemon):
+    """
+    A Pokemon of type Defender
+    """
+
+    def get_pokemon_attack_coef(self) -> float:
+        """
+        Compute a damage multiplier related to the Defender type.
+
+        Returns:
+            float: the multiplier
+        """
+        return 1 + (self.attack_current + self.defense_current) / 200
+
+
+class AttackerPokemon(AbstractPokemon):
+    """
+    A Pokemon of type Attacker
+    """
+
+    def get_pokemon_attack_coef(self) -> float:
+        """
+        Compute a damage multiplier related to the Attacker type.
+
+        Returns:
+            float: the multiplier
+        """
+        return 1 + (self.speed_current + self.attack_current) / 200
+
+
+class AllRounderPokemon(AbstractPokemon):
+    """
+    A Pokemon of type All rounder
+    """
+
+    def get_pokemon_attack_coef(self) -> float:
+        """
+        Compute a damage multiplier related to the All rounder type.
+
+        Returns:
+            float: the multiplier
+        """
+        return 1 + (self.sp_atk_current + self.sp_def_current) / 200
 
