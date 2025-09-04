@@ -289,3 +289,121 @@ class FixedDamageAttack(AbstractAttack):
             int: The damage dealt.
         """
         return self._power
+
+
+import random
+
+
+class AbstractFormulaAttack(AbstractAttack, ABC):
+    """
+    An abstract base class for formula-based attacks
+    """
+
+    def __init__(self, power: int, name: str, description: str):
+        super().__init__(power, name, description)
+
+    def compute_damage(self, attacker: AbstractPokemon, defender: AbstractPokemon) -> int:
+        """
+        Compute the damage of the formula-based attack.
+
+        Args:
+            attacker (AbstractPokemon): The attacking Pokemon.
+            defender (AbstractPokemon): The defending Pokemon.
+
+        Returns:
+            int: The damage dealt.
+        """
+        level = attacker.level
+        power = self.power
+        att = self.get_attack_stat(attacker)
+        defense = self.get_defense_stat(defender)
+        random_multiplier = random.uniform(0.85, 1)
+        other_multipliers = attacker.get_pokemon_attack_coef()
+
+        damage = (((2 * level / 5 + 2) * power * att) / (defense * 50) + 2) * random_multiplier * other_multipliers
+        return int(damage)
+
+    @abstractmethod
+    def get_attack_stat(self, pokemon: AbstractPokemon) -> int:
+        """
+        Get the attack stat of the Pokemon.
+
+        Args:
+            pokemon (AbstractPokemon): The Pokemon.
+
+        Returns:
+            int: The attack stat.
+        """
+        pass
+
+    @abstractmethod
+    def get_defense_stat(self, pokemon: AbstractPokemon) -> int:
+        """
+        Get the defense stat of the Pokemon.
+
+        Args:
+            pokemon (AbstractPokemon): The Pokemon.
+
+        Returns:
+            int: The defense stat.
+        """
+        pass
+
+
+class PhysicalAttack(AbstractFormulaAttack):
+    """
+    A physical attack
+    """
+
+    def get_attack_stat(self, pokemon: AbstractPokemon) -> int:
+        """
+        Get the attack stat of the Pokemon.
+
+        Args:
+            pokemon (AbstractPokemon): The Pokemon.
+
+        Returns:
+            int: The attack stat.
+        """
+        return pokemon.attack_current
+
+    def get_defense_stat(self, pokemon: AbstractPokemon) -> int:
+        """
+        Get the defense stat of the Pokemon.
+
+        Args:
+            pokemon (AbstractPokemon): The Pokemon.
+
+        Returns:
+            int: The defense stat.
+        """
+        return pokemon.defense_current
+
+class SpecialAttack(AbstractFormulaAttack):
+    """
+    A special attack
+    """
+
+    def get_attack_stat(self, pokemon: AbstractPokemon) -> int:
+        """
+        Get the special attack stat of the Pokemon.
+
+        Args:
+            pokemon (AbstractPokemon): The Pokemon.
+
+        Returns:
+            int: The special attack stat.
+        """
+        return pokemon.sp_atk_current
+
+    def get_defense_stat(self, pokemon: AbstractPokemon) -> int:
+        """
+        Get the special defense stat of the Pokemon.
+
+        Args:
+            pokemon (AbstractPokemon): The Pokemon.
+
+        Returns:
+            int: The special defense stat.
+        """
+        return pokemon.sp_def_current
