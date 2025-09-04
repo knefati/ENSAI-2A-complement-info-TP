@@ -231,3 +231,61 @@ class AllRounderPokemon(AbstractPokemon):
         """
         return 1 + (self.sp_atk_current + self.sp_def_current) / 200
 
+
+class AbstractAttack(ABC):
+    """
+    An abstract base class for attacks
+    """
+
+    def __init__(self, power: int, name: str, description: str):
+        self._power = power
+        self._name = name
+        self._description = description
+
+    @abstractmethod
+    def compute_damage(self, attacker: 'AbstractPokemon', defender: 'AbstractPokemon') -> int:
+        """
+        Compute the damage of the attack.
+
+        Args:
+            attacker (AbstractPokemon): The attacking Pokemon.
+            defender (AbstractPokemon): The defending Pokemon.
+
+        Returns:
+            int: The damage dealt.
+        """
+        pass
+
+    @property
+    def power(self) -> int:
+        """Get the power of the attack."""
+        return self._power
+
+    @property
+    def name(self) -> str:
+        """Get the name of the attack."""
+        return self._name
+
+    @property
+    def description(self) -> str:
+        """Get the description of the attack."""
+        return self._description
+
+
+class FixedDamageAttack(AbstractAttack):
+    """
+    A fixed damage attack
+    """
+
+    def compute_damage(self, attacker: 'AbstractPokemon', defender: 'AbstractPokemon') -> int:
+        """
+        Compute the damage of the fixed damage attack.
+
+        Args:
+            attacker (AbstractPokemon): The attacking Pokemon.
+            defender (AbstractPokemon): The defending Pokemon.
+
+        Returns:
+            int: The damage dealt.
+        """
+        return self._power
